@@ -12,8 +12,10 @@ st.caption("上传官方导出的笔记明细表，一键生成月度报表")
 uploaded_file = st.file_uploader("上传小红书导出的「笔记列表明细表.xlsx」", type=["xlsx", "xls"])
 
 if uploaded_file is not None:
-    # 读取数据（跳过前两行，第三行是表头）
-    df = pd.read_excel(uploaded_file, skiprows=2)
+   # 读取数据（跳过第一行标题，第二行是表头）
+    df = pd.read_excel(uploaded_file, skiprows=1)
+    df.columns = df.columns.str.strip()  # 清理列名
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]  # 删掉多余的空列
     
     # 清理列名（去除空格）
     df.columns = df.columns.str.strip()
